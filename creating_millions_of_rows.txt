@@ -1,0 +1,83 @@
+
+// Create Table 
+    create table test_table (t int);
+
+// Insert Rows
+    insert into test_table select random()*100 from generate_series(0,100001);
+
+// Get counts of Rows
+    select count(*) from test_table;
+
+// Add a new row to table
+    alter table test_table add column firstname varchar(255);
+
+// update every row and put value as 'harshit' for firstname
+    update test_table set firstname = 'harshit' where t >= 0;
+
+
+// analyze performance of a query (without indexing)
+
+    1.  explain analyze select t from test_table where t = 20000;
+
+                                             QUERY PLAN                                                 
+            -----------------------------------------------------------------------------------------------------------
+            Seq Scan on test_table  (cost=0.00..2234.03 rows=497 width=4) (actual time=18.411..18.413 rows=0 loops=1)
+            Filter: (t = 20000)
+            Rows Removed by Filter: 100002
+            Planning Time: 0.184 ms
+            Execution Time: 18.458 ms
+            (5 rows)
+
+    2.  explain analyze select firstname from test_table where t = 400000;
+                                                QUERY PLAN                                                 
+            -----------------------------------------------------------------------------------------------------------
+            Seq Scan on test_table  (cost=0.00..2234.03 rows=497 width=8) (actual time=13.832..13.833 rows=0 loops=1)
+            Filter: (t = 400000)
+            Rows Removed by Filter: 100002
+            Planning Time: 0.205 ms
+            Execution Time: 13.895 ms    
+
+
+
+ // Create an index on test_table
+ 
+    CREATE INDEX t_custom_index ON test_table USING btree(t);
+
+        ayushBhopalDB-# \d test_table 
+
+                            Table "public.test_table"
+        Column   |          Type          | Collation | Nullable | Default 
+        -----------+------------------------+-----------+----------+---------
+        t         | integer                |           |          | 
+        firstname | character varying(255) |           |          | 
+        Indexes:
+            "t_custom_index" btree (t)     
+
+
+
+
+ // analyze performance of a query (with indexing)
+
+    1.  explain analyze select t from test_table where t = 20000;   
+
+        -----------------------------------------------------------------------------------------------------------------------------------
+        Index Only Scan using t_custom_index on test_table  (cost=0.29..12.99 rows=497 width=4) (actual time=0.089..0.090 rows=0 loops=1)
+        Index Cond: (t = 20000)
+        Heap Fetches: 0
+        Planning Time: 0.658 ms
+        Execution Time: 0.128 ms
+        (5 rows)   
+
+
+    2.  explain analyze select firstname from test_table where t = 20000;
+
+        -------------------------------------------------------------------------------------------------------------------------
+        Bitmap Heap Scan on test_table  (cost=8.14..845.86 rows=497 width=8) (actual time=0.045..0.046 rows=0 loops=1)
+        Recheck Cond: (t = 20000)
+        ->  Bitmap Index Scan on t_custom_index  (cost=0.00..8.02 rows=497 width=0) (actual time=0.040..0.041 rows=0 loops=1)
+                Index Cond: (t = 20000)
+        Planning Time: 0.254 ms
+        Execution Time: 0.103 ms
+        (6 rows)     
+
+
