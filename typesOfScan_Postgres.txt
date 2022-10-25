@@ -1,0 +1,5 @@
+1.  Sequential table Scan
+
+2.  INDEX Scan
+
+3.  Bitmap INDEX Scan
