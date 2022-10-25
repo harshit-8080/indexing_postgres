@@ -1,0 +1,6 @@
+1.  What indexes to create for a table?    
+
+        Index every primary key.
+        Index every foreign key.
+        Index every column used in a JOIN clause.
+        Index every column used in a WHERE clause.

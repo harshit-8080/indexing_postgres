@@ -1,0 +1,64 @@
+Index Scan Example
+
+     1.  Suppose you have an index on table test_table on column t and you run below query.
+
+     2. explain analyze select firstname from test_table where t = 20000;   
+
+        -----------------------------------------------------------------------------------------------------------------------------------
+        Index Only Scan using t_custom_index on test_table  (cost=0.29..12.99 rows=497 width=4) (actual time=0.089..0.090 rows=0 loops=1)
+        Index Cond: (t = 20000)
+        Heap Fetches: 0
+        Planning Time: 0.658 ms
+        Execution Time: 0.128 ms
+        (5 rows)   
+
+    3.  Index has t but not the firstname so they need to go the heap memory to fetch first page, then row and the column name.
+
+    4.  Index scans
+
+        An index is just references to the rows in a table, stored in a data structure (usually a B-tree) based on their values in the indexed columns.
+
+        An index scan reads through the index and uses it to quickly look up the rows that match your filter (something like WHERE x > 10), and return them in the order they’re stored in the index.
+
+        Postgres then goes to look up the data in these rows from the table, in the heap, where it would have found them if it had done a sequential scan.
+
+        It checks that they are visible to the current transaction — for example they haven’t been deleted or replaced by a newer version — and passes them on to the next operation
+
+
+
+Index Only Scan Example
+
+    1.  This is very similar to an Index Scan, but the data comes directly from the index.
+    2.  The visibility check is handled specially, so it can avoid looking at the table data entirely. 
+    3.  An index-only scan is faster.
+
+    4.  explain analyze select t from test_table where t = 20000;   
+
+        -----------------------------------------------------------------------------------------------------------------------------------
+        Index Only Scan using t_custom_index on test_table  (cost=0.29..12.99 rows=497 width=4) (actual time=0.089..0.090 rows=0 loops=1)
+        Index Cond: (t = 20000)
+        Heap Fetches: 0
+        Planning Time: 0.658 ms
+        Execution Time: 0.128 ms
+        (5 rows)  
+
+
+    Another Example
+
+    5.  create index id_idx on students(id) include(name);  // we have included name in the index so while searching name we don't need to go heap memory area.
+    
+    6.  explain analyze select name from students where id = 7; 
+
+        -----------------------------------------------------------------------------------------------------------------------------------
+        Index Only Scan using id_idx on students (cost=0.29..12.99 rows=497 width=4) (actual time=0.089..0.090 rows=0 loops=1)
+        Index Cond: (id = 7)
+        Heap Fetches: 0
+        Planning Time: 0.658 ms
+        Execution Time: 0.128 ms
+        (5 rows)  
+
+     7. Index-only scans start off like index scans, but they get all their column information from the index.
+
+     8. Now no need to go back to the table to fetch the row data.
+
+
