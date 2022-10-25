@@ -1,0 +1,32 @@
+1.  You can create an index on more than one column of a table. 
+
+2.  This index is called a multicolumn index, a composite index, a combined index, or a concatenated index.
+
+Examples :-
+
+    1.  CREATE INDEX test_table_a_b_c_idx  ON test_table(a,b,c);
+    
+        here we have created composite index on a, b and c.
+    
+    2.  When defining a multicolumn index
+
+    3.  you should place the columns which are often used in the WHERE clause at the beginning of the column list.
+    
+    4.  And the columns that are less frequently used in the condition after.  
+        
+
+
+    5.  In the above Examples, the PostgreSQL optimizer will consider using the index in the following cases:
+            1.  WHERE a = v1 and b = v2 and c = v3;
+            2.  WHERE a = v1 and b = v2;
+            3.  WHERE a = v1;
+
+    6.  However, it will not consider using the index in the following cases:
+            1.  WHERE  c = v3;
+            2.  WHERE b = v2 and c = v3;    
+
+            If we do above, it will do seq. scan not index scan because it's not on leftmost side.
+
+    
+    7. These composite indexing we should use when we need to use "and" and "or clauses more often.
+           
