@@ -1,0 +1,19 @@
+We can create indexes of key and non key columns in postgres.
+
+1.  Index key column
+
+        CREATE INDEX index1 ON table1 (col1, col2, col3)
+
+2.  Index on non key column
+
+        CREATE INDEX index2 ON table1 (col1) INCLUDE (col2, col3)
+
+3.  index1 is better suited for this kind of query:
+
+        SELECT * FROM table1 WHERE col1 = x AND col2 = y AND col3 = z
+
+4.  Whereas index2 is better suited for this kind of query:
+
+        SELECT col2, col3 FROM table1 WHERE col1 = x;
+
+        
