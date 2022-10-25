@@ -2,4 +2,6 @@
 
 2.  INDEX Scan
 
-3.  Bitmap INDEX Scan
+3.  INDEX only Scan
+
+4.  Bitmap INDEX Scan
