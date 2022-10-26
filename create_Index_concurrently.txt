@@ -1,0 +1,17 @@
+Point to remember
+    
+    1.  While creating index on any field on production or on server or on local database.
+
+    2.  Insert operations on that field can't be done as this field is block or being to create index.  
+
+    3.  Select operations can be done easily.
+
+
+Postgres do things in very better way by giving us a way to create index concurrently
+
+    Examples :-
+    
+        Create index concurrently g_idx on students(grade);
+
+        Whiile doing things concurrently, We can Select and Insert rows along with creating index.
+
