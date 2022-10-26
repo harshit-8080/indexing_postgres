@@ -1,0 +1,9 @@
+Questiobn :- What is a Bloom filter?
+
+1.  It is a probabilistic data structure designed to answer the set membership question- Is this element present in the Set?
+
+2.  It is highly space efficient and does not store the actual items.
+
+3.  It can tell very quickly if an item does not exist in a set or if it may be existing in the Set.
+
+4.  However, it cannot tell if an item is definitely present in a Set.
