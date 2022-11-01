@@ -1,0 +1,28 @@
+Types of Index in Database
+
+    1.  Primary Index (Cluster Index) :-    (only one cluster in a table)
+        1.  If the data file or row is in sequential sorted order in table based on some column or attribute.
+        2.  Primary Index or Cluster Index is an index whose search key also defines the sequential order of the file.
+        3.  Primary key column is automatically considered as cluster index column because they stored in sorted order.
+
+    
+
+    2. Non cluster Index :-
+        1.  When we create non cluster index column on table it creates seprate index table with the sorted value of indexes and a pointer.
+        2. This pointer actucal points to a physical row.
+
+
+
+    3. Dense Index :- Example of Non Cluster Index
+        1. The dense index contains an index record for very search key value in the data file.
+        2. It contains the search key value and a pointer which points to table.
+        3. No cluster is example of dense indexing.
+        4. In Dense Index table, -> no. of entries in the the index file = no.of rows in datafile.
+
+
+    4. Sparse Key :- Example of Cluster Index
+        1. An index record appears for only some of the search-key values.
+        2. It helps you to resolve the issues of dence indexing in DBMS.
+        3. In Sparse Index table, -> no. of entries in the the index file = no.of blocks in datafile.
+        4. In this technique, A range of index columns stores the same data block address.
+        5. When data needs to be retrived, The block address will be fetched.
